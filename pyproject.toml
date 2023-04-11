@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "clara"
+version = "0.0.1"
+description = "CLARA: Code Language Assistant & Repository Analyzer"
+authors = ["Cristóbal Carnero Liñán <cristobal@seednapse.ai>"]
+readme = "README.md"
+packages = [{include = "clara"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+langchain = {extras = ["llms"], version = "^0.0.136"}
+fire = "^0.5.0"
+chromadb = "^0.3.21"
+rich = "^13.3.3"
+tiktoken = "^0.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+clara = "clara.cli:main"
