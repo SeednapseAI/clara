@@ -38,7 +38,7 @@ class MultipleTextLoader(BaseLoader):
         """Load from file path."""
         documents = []
         for file_path in self._get_files_by_wildcards(self.path, self.wildcards):
-            console.log(f"Adding: [blue underline]{file_path}", "…")
+            console.log(f"Loading [blue underline]{file_path}", "…")
             with open(file_path, encoding=self.encoding) as f:
                 text = f.read()
             metadata = {"source": file_path}
@@ -55,7 +55,7 @@ class QueryResult:
 
 class RepositoryIndex:
     def __init__(self, path: str):
-        self.path = path
+        self.path = os.path.abspath(path)
         self.index = None
 
     def ingest(self):
@@ -66,26 +66,19 @@ class RepositoryIndex:
         return QueryResult(**self.index.query_with_sources(query))
 
 
-class RepositoryIndexPersisted:
+class RepositoryIndexPersisted(RepositoryIndex):
     def __init__(self, path: str):
-        self.path = pathlib.Path(path).resolve()
-        self.index = None
-
+        super().__init__(path)
         self.persist_path = self.get_persist_path()
 
     def get_persist_path(self) -> str:
         hashed_path = hashlib.sha256(str(self.path).encode("utf-8")).hexdigest()
         short_hash = hashed_path[:8]
-
         base_name = os.path.basename(self.path)
-
         return os.path.join(BASE_PERSIST_PATH, f"{base_name}_{short_hash}")
 
     def ingest(self):
-        console.log("Create persist directory:", self.persist_path)
         pathlib.Path(self.persist_path).mkdir(parents=True, exist_ok=True)
-        console.log("Done! :check:")
-
         code_loader = MultipleTextLoader(self.path, WILDCARDS)
         self.index = VectorstoreIndexCreator(
             vectorstore_kwargs={"persist_directory": self.persist_path}
@@ -105,6 +98,3 @@ class RepositoryIndexPersisted:
         self.index = VectorStoreIndexWrapper(vectorstore=vectorstore)
 
         return True
-
-    def query_with_sources(self, query: str) -> QueryResult:
-        return QueryResult(**self.index.query_with_sources(query))
