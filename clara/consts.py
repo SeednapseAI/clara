@@ -1,3 +1,15 @@
+import os
+from pathlib import Path
+
+
+USER_HOME = Path.home()
+
+
+BASE_PERSIST_PATH = os.path.join(
+    os.environ.get("XDG_CACHE_HOME", Path.joinpath(USER_HOME, ".cache")), "clara"
+)
+
+
 WILDCARDS = (
     # Python
     "*.py",

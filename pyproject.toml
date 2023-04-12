@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "clara"
+name = "clara-ai"
 version = "0.0.1"
 description = "CLARA: Code Language Assistant & Repository Analyzer"
 authors = ["Cristóbal Carnero Liñán <cristobal@seednapse.ai>"]

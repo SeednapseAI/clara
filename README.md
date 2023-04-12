@@ -6,7 +6,21 @@ CLARA: Code Language Assistant & Repository Analyzer 📜🔍🤖
 
 ## Usage
 
-Firstly, set an environment variable with you OpenAI API key:
+Install:
+
+```
+pipx install clara-ai
+```
+
+Or:
+
+```
+pip3 install clara-ai
+```
+
+## Usage
+
+Firstly, set an environment variable with your OpenAI API key:
 
 ```
 export OPENAI_API_KEY="XXXXXX"
