@@ -1,17 +1,21 @@
 import os
 import pathlib
 import hashlib
-from typing import List
+import shutil
+from typing import List, Tuple, Iterable, Optional
 from dataclasses import dataclass
 import glob
 
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import ConversationalRetrievalChain
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.indexes.vectorstore import VectorStoreIndexWrapper
 from langchain.vectorstores import Chroma
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
+from langchain.schema import Document
 
-from .consts import WILDCARDS, BASE_PERSIST_PATH
+from .consts import WILDCARDS, BASE_PERSIST_PATH, PROMPT_PREFIX
 from .console import console
 
 
@@ -19,13 +23,63 @@ from .console import console
 class QueryResult:
     question: str
     answer: str
-    sources: str
+    sources: List[Document]
+
+
+class ChatHistory:
+    def __init__(
+        self, prompt_prefix: Optional[Tuple[str, str]] = None, length_limit: int = 4096
+    ):
+        self.prompt_prefix = prompt_prefix
+        self.history = [prompt_prefix] if prompt_prefix else []
+        self.length_limit = length_limit
+
+    def append(self, messages: Tuple[str, str]):
+        def get_total_length(messages: Iterable[str]) -> int:
+            return sum(len(message) for message in messages)
+
+        total_length = sum([get_total_length(message) for message in messages])
+        if self.prompt_prefix:
+            total_length += get_total_length(self.prompt_prefix)
+
+        keep_history = 1
+
+        while True:
+            if keep_history > len(self.history):
+                break
+
+            next_length = total_length + get_total_length(self.history[-keep_history])
+            if next_length > self.length_limit:
+                break
+
+            keep_history += 1
+
+        if self.prompt_prefix:
+            new_history = [self.history[0]]
+        else:
+            new_history = []
+
+        new_history += self.history[-keep_history:-1]
+        new_history += [messages]
+
+        self.history = new_history
 
 
 class RepositoryIndex:
-    def __init__(self, path: str):
+    def __init__(self, path: str, in_memory: bool = False):
         self.path = os.path.abspath(path)
         self.index = None
+        self.in_memory = in_memory
+        self.persist_path = self.get_persist_path()
+
+        self.chat = None
+        self.chat_history = ChatHistory(prompt_prefix=PROMPT_PREFIX)
+
+    def get_persist_path(self) -> str:
+        hashed_path = hashlib.sha256(str(self.path).encode("utf-8")).hexdigest()
+        short_hash = hashed_path[:8]
+        base_name = os.path.basename(self.path)
+        return os.path.join(BASE_PERSIST_PATH, f"{base_name}_{short_hash}")
 
     def _get_texts(self):
         def get_files_by_wildcards(path: str, wildcards: List[str]) -> List[str]:
@@ -37,62 +91,66 @@ class RepositoryIndex:
 
             return matched_files
 
+        if not os.path.exists(self.path):
+            raise Exception(f"Path does not exists: {self.path}")
+
         documents = []
         for file_path in get_files_by_wildcards(self.path, WILDCARDS):
             console.log(f"Loading [blue underline]{file_path}", "…")
             loader = TextLoader(file_path, encoding="utf-8")
             documents.extend(loader.load_and_split())
 
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         return text_splitter.split_documents(documents)
 
     def ingest(self):
-        texts = self._get_texts()
-        self.index = VectorStoreIndexWrapper(
-            vectorstore=Chroma.from_documents(
-                texts,
-                OpenAIEmbeddings(),
-            )
-        )
+        if not self.in_memory:
+            if os.path.exists(self.persist_path):
+                vectorstore = Chroma(
+                    persist_directory=self.persist_path,
+                    embedding_function=OpenAIEmbeddings(),
+                )
+                self.index = VectorStoreIndexWrapper(vectorstore=vectorstore)
+                return
 
-    def query_with_sources(self, query: str) -> QueryResult:
-        return QueryResult(**self.index.query_with_sources(query))
-
-
-class RepositoryIndexPersisted(RepositoryIndex):
-    def __init__(self, path: str):
-        super().__init__(path)
-        self.persist_path = self.get_persist_path()
-
-    def get_persist_path(self) -> str:
-        hashed_path = hashlib.sha256(str(self.path).encode("utf-8")).hexdigest()
-        short_hash = hashed_path[:8]
-        base_name = os.path.basename(self.path)
-        return os.path.join(BASE_PERSIST_PATH, f"{base_name}_{short_hash}")
-
-    def ingest(self):
-        pathlib.Path(self.persist_path).mkdir(parents=True, exist_ok=True)
+            pathlib.Path(self.persist_path).mkdir(parents=True, exist_ok=True)
 
         texts = self._get_texts()
         self.index = VectorStoreIndexWrapper(
             vectorstore=Chroma.from_documents(
                 texts,
                 OpenAIEmbeddings(),
-                persist_directory=self.persist_path,
+                persist_directory=self.persist_path if not self.in_memory else None,
             )
         )
 
     def persist(self):
-        self.index.vectorstore.persist()
+        if not self.in_memory:
+            self.index.vectorstore.persist()
 
-    def load(self) -> bool:
-        if not os.path.exists(self.persist_path):
-            return False
+    def clean(self):
+        if not self.in_memory:
+            shutil.rmtree(self.persist_path)
 
-        vectorstore = Chroma(
-            persist_directory=self.persist_path,
-            embedding_function=OpenAIEmbeddings(),
+    def init_chat(self):
+        model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)  # 'gpt-4',
+        self.chat = ConversationalRetrievalChain.from_llm(
+            model,
+            retriever=self.index.vectorstore.as_retriever(),
+            return_source_documents=True,
         )
-        self.index = VectorStoreIndexWrapper(vectorstore=vectorstore)
 
-        return True
+    def query_with_sources(self, query: str) -> QueryResult:
+        # return QueryResult(**self.index.query_with_sources(query))
+        if self.chat is None:
+            self.init_chat()
+        response = self.chat(
+            {"question": query, "chat_history": self.chat_history.history}
+        )
+        # console.log(response)
+        self.chat_history.append((response["question"], response["answer"]))
+        return QueryResult(
+            question=response["question"],
+            answer=response["answer"],
+            sources=response["source_documents"],
+        )

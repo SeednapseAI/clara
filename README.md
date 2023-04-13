@@ -12,7 +12,7 @@ Clara is a tool to help developers understand and work with a code repository.
 
 ## Introduction
 
-Clara is an AI-powered tool designed to assist developers in navigating unfamiliar code repositories, making it highly valuable during the on-boarding process for new projects, or when deciphering legacy code..
+Clara is an AI-powered tool designed to assist developers in navigating unfamiliar code repositories, making it highly valuable during the on-boarding process for new projects, or when deciphering legacy code.
 
 In the future, Clara will also provide support for tasks such as documentation, auditing, and developing new features, among others.
 
@@ -62,6 +62,21 @@ COMMANDS
 
      config
        Get config for a given path.
+```
+
+## Chat commands
+
+During chat you can also use this commands:
+
+```
+/context -- show the context for the last answer
+
+/edit    -- open editor to edit the message
+
+/quit
+/exit    -- exit (you can use also CTRL-C or CTRL-D)
+
+/help    -- show this message
 ```
 
 ## Roadmap

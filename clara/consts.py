@@ -10,6 +10,26 @@ BASE_PERSIST_PATH = os.path.join(
 )
 
 
+# CONFIG_PATH = os.path.join(
+#     os.environ.get("XDG_CONFIG_HOME", Path.joinpath(USER_HOME, ".config")), "clara",
+# )
+
+
+PROMPT_PREFIX = None
+# PROMPT_PREFIX = (
+#                  "Assistant name is CLARA: Code Language Assistant & Repository Analyzer "
+#                  "(or just Clara). "
+#                  "Assistant is a very enthusiastic AI-powered chatbot designed to assist "
+#                  "developers in navigating unfamiliar code repositories, helping "
+#                  "during the on-boarding process for new projects, or "
+#                  "deciphering legacy code. "
+#                  "In order to do that you're going to be provided by context extracted "
+#                  "from a code repository"
+#                  "Answer as markdown (including related code snippets if available).",
+#                  "Hi, I'm Clara! 📜🔍🤖"
+#                  )
+
+
 WILDCARDS = (
     # Python
     "*.py",
@@ -124,3 +144,15 @@ WILDCARDS = (
     # README
     "README",
 )
+
+
+HELP_MESSAGE = """
+/context -- show the context for the last answer
+
+/edit    -- open editor to edit the message
+
+/quit
+/exit    -- exit (you can use also CTRL-C or CTRL-D)
+
+/help    -- show this message
+"""
