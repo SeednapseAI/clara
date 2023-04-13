@@ -15,7 +15,7 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema import Document
 
-from .consts import WILDCARDS, BASE_PERSIST_PATH, PROMPT_PREFIX
+from .consts import WILDCARDS, BASE_PERSIST_PATH, PROMPT_PREFIX, CONDENSE_QUESTION_PROMPT
 from .console import console
 
 
@@ -138,6 +138,7 @@ class RepositoryIndex:
             model,
             retriever=self.index.vectorstore.as_retriever(),
             return_source_documents=True,
+            condense_question_prompt=CONDENSE_QUESTION_PROMPT,
         )
 
     def query_with_sources(self, query: str) -> QueryResult:
@@ -146,6 +147,7 @@ class RepositoryIndex:
             self.init_chat()
         response = self.chat(
             {"question": query, "chat_history": self.chat_history.history}
+            # {"question": query, "chat_history": ""}
         )
         # console.log(response)
         self.chat_history.append((response["question"], response["answer"]))

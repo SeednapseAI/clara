@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from langchain.prompts.prompt import PromptTemplate
+
 
 USER_HOME = Path.home()
 
@@ -28,6 +30,23 @@ PROMPT_PREFIX = (
     # "code blocks).",
     # "Hi, I'm Clara! 📜🔍🤖"
     # "",
+)
+
+
+CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(
+    "Rephrase the "
+    "follow up question to be a standalone question. "
+    "Use the chat history for context if needed.\n"
+    "\n"
+    "Chat History:\"\"\"\n"
+    "{chat_history}\n"
+    "\"\"\"\n"
+    "\n"
+    "Follow Up Question: \"\"\"\n"
+    "{question}\n"
+    "\"\"\"\n"
+    "\n"
+    "Standalone Question:"
 )
 
 
