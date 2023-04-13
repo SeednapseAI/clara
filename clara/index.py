@@ -100,7 +100,7 @@ class RepositoryIndex:
             loader = TextLoader(file_path, encoding="utf-8")
             documents.extend(loader.load_and_split())
 
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         return text_splitter.split_documents(documents)
 
     def ingest(self):

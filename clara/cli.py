@@ -15,8 +15,9 @@ from .console import console
 from .index import RepositoryIndex
 
 
-# Disable ChromaDB logging
-logger = logging.getLogger("chromadb").setLevel(logging.ERROR)
+# Disable warnings
+logging.getLogger("chromadb").setLevel(logging.ERROR)
+logging.getLogger().setLevel(logging.ERROR)
 
 
 class Clara:

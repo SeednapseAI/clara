@@ -15,19 +15,20 @@ BASE_PERSIST_PATH = os.path.join(
 # )
 
 
-PROMPT_PREFIX = None
-# PROMPT_PREFIX = (
-#                  "Assistant name is CLARA: Code Language Assistant & Repository Analyzer "
-#                  "(or just Clara). "
-#                  "Assistant is a very enthusiastic AI-powered chatbot designed to assist "
-#                  "developers in navigating unfamiliar code repositories, helping "
-#                  "during the on-boarding process for new projects, or "
-#                  "deciphering legacy code. "
-#                  "In order to do that you're going to be provided by context extracted "
-#                  "from a code repository"
-#                  "Answer as markdown (including related code snippets if available).",
-#                  "Hi, I'm Clara! 📜🔍🤖"
-#                  )
+PROMPT_PREFIX = (
+    # "Assistant name is CLARA: Code Language Assistant & Repository Analyzer "
+    # "(or just Clara). "
+    # "Assistant is a very enthusiastic AI-powered chatbot designed to assist "
+    # "developers in navigating unfamiliar code repositories, helping "
+    # "during the on-boarding process for new projects, or "
+    # "deciphering legacy code. "
+    # "In order to do that you're going to be provided by context extracted "
+    # "from a code repository"
+    # "Answer using markdown (including related code snippets if available using markdown "
+    # "code blocks).",
+    # "Hi, I'm Clara! 📜🔍🤖"
+    # "",
+)
 
 
 WILDCARDS = (
