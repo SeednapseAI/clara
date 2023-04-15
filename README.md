@@ -83,11 +83,15 @@ During chat you can also use this commands:
 
 Run `poetry run clara config` to know from where the program is going to read the configuration. Usually this path is going to be `/.config/clara/clara.yaml`.
 
-For now, there is only one parameter to change. This is a sample configuration:
+For now, there is only a couple of parameters. This is a sample configuration with the default values:
 
 ```
 llm:
   model: gpt-3.5-turbo
+index:
+  # similarity or mmr
+  search: similarity
+  k: 5
 ```
 
 Change the model for `gpt-4` if you have access to it.

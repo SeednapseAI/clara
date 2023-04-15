@@ -18,6 +18,7 @@ from .consts import (
     BASE_PERSIST_PATH,
     PROMPT_PREFIX,
 )
+from .config import config
 from .chat import create_chat
 from .console import console
 
@@ -103,7 +104,9 @@ class RepositoryIndex:
             loader = TextLoader(file_path, encoding="utf-8")
             documents.extend(loader.load_and_split())
 
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+        text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
+            chunk_size=1000, chunk_overlap=100
+        )
         return text_splitter.split_documents(documents)
 
     def ingest(self):
@@ -136,18 +139,14 @@ class RepositoryIndex:
             shutil.rmtree(self.persist_path)
 
     def init_chat(self):
-        # model = self.get_model()
-        # self.chat = ConversationalRetrievalChain.from_llm(
-        #     model,
-        #     retriever=self.index.vectorstore.as_retriever(),
-        #     return_source_documents=True,
-        #     condense_question_prompt=CONDENSE_QUESTION_PROMPT,
-        # )
-
-        self.chat = create_chat(self.index.vectorstore.as_retriever())
+        self.chat = create_chat(
+            self.index.vectorstore.as_retriever(
+                search_type=config["index"]["search_type"],
+                search_kwargs={"k": config["index"]["k"]},
+            )
+        )
 
     def query_with_sources(self, query: str) -> QueryResult:
-        # return QueryResult(**self.index.query_with_sources(query))
         if self.chat is None:
             self.init_chat()
         response = self.chat(

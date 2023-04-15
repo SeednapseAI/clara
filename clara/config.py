@@ -5,7 +5,13 @@ from mergedeep import merge
 from .consts import CONFIG_PATH
 
 
-defaults = {"llm": {"name": "gpt-3.5-turbo", "temperature": 0}}
+defaults = {
+    "llm": {"name": "gpt-3.5-turbo", "temperature": 0},
+    "index": {
+        "search_type": "similarity",  # "mmr"
+        "k": 5,
+    },
+}
 
 
 config = defaults
