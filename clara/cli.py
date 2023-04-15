@@ -10,13 +10,31 @@ from prompt_toolkit.history import FileHistory
 import click
 from openai.error import InvalidRequestError
 
-from .consts import HELP_MESSAGE
+from .consts import HELP_MESSAGE, CONFIG_PATH
 from .console import console
 from .index import RepositoryIndex
 
 
 # Disable warnings
-# logging.getLogger().setLevel(logging.ERROR)
+logging.getLogger().setLevel(logging.ERROR)
+
+
+def setup(path: str, memory_storage: bool) -> RepositoryIndex:
+    index = RepositoryIndex(path, in_memory=memory_storage)
+
+    with console.status(
+        f"Ingesting code repository from path: [blue underline]{path} …",
+        spinner="weather",
+    ):
+        index.ingest()
+
+    with console.status(
+        "Storing vector database in path: " "[blue underline]{index.persist_path} …",
+        spinner="weather",
+    ):
+        index.persist()
+
+    return index
 
 
 class Clara:
@@ -25,35 +43,63 @@ class Clara:
     def config(self, path: str = "."):
         """Show config for a given path."""
         index = RepositoryIndex(path)
-        console.print(f"Vector DB persist path = [blue underline]{index.persist_path}")
+        console.print(f"Configuration path (global) = [blue underline]{CONFIG_PATH}")
+        console.print(
+            "Data persistence path (for this project) = "
+            f"[blue underline]{index.persist_path}"
+        )
 
     def clean(self, path: str = "."):
         """Delete vector DB for a given path."""
         index = RepositoryIndex(path)
         if Confirm.ask(
             "Are you sure you want to remove "
-            f"[blue underline]{index.persist_path}[/blue underline]?",
+            f"[blue underline]{index.persist_path}[/blue underline]? "
+            "This will remove the vector DB and the chat history for this code.",
             default=False,
         ):
             index.clean()
 
+    def ask(
+        self,
+        question,
+        path: str = ".",
+        memory_storage: bool = False,
+        markdown_render: bool = True,
+        sources: bool = True,
+        full_sources: bool = False,
+    ):
+        """Ask a question about the code from the command-line."""
+        index = setup(path, memory_storage)
+
+        try:
+            with console.status("Querying…", spinner="weather"):
+                result = index.query_with_sources(question)
+            if markdown_render:
+                console.print(Markdown(result.answer))
+            else:
+                console.print(result.answer)
+            console.print()
+            console.print("[yellow]SOURCES[/yellow]")
+            if sources:
+                if full_sources:
+                    for source in result.sources:
+                        console.print()
+                        console.print(source.page_content)
+                        console.print(f"- [blue underline]{source.metadata['source']}")
+                else:
+                    for source in result.sources:
+                        console.print(f"- [blue underline]{source.metadata['source']}")
+        except InvalidRequestError:
+            console.print(
+                ":no_entry: " "[bold red]Ups, the request was invalid for some reason."
+            )
+        finally:
+            pass
+
     def chat(self, path: str = ".", memory_storage: bool = False):
         """Chat about the code."""
-
-        index = RepositoryIndex(path, in_memory=memory_storage)
-
-        with console.status(
-            f"Ingesting code repository from path: [blue underline]{path} …",
-            spinner="weather",
-        ):
-            index.ingest()
-
-        with console.status(
-            "Storing vector database in path: "
-            "[blue underline]{index.persist_path} …",
-            spinner="weather",
-        ):
-            index.persist()
+        index = setup(path, memory_storage)
 
         console.rule("[bold blue]CHAT")
         console.print("Hi, I'm Clara!", ":scroll::mag::robot:")
@@ -95,10 +141,7 @@ class Clara:
                         console.print(HELP_MESSAGE)
                         continue
                     else:
-                        console.print(
-                            ":no_entry: "
-                            "[bold red]Unknown command."
-                        )
+                        console.print(":no_entry: " "[bold red]Unknown command.")
                         continue
 
                 try:
@@ -111,11 +154,11 @@ class Clara:
                     for source in result.sources:
                         console.print(f"- [blue underline]{source.metadata['source']}")
                     last_sources = result.sources
-                # except InvalidRequestError:
-                #     console.print(
-                #         ":no_entry: "
-                #         "[bold red]Ups, the request was invalid for some reason."
-                #     )
+                except InvalidRequestError:
+                    console.print(
+                        ":no_entry: "
+                        "[bold red]Ups, the request was invalid for some reason."
+                    )
                 finally:
                     pass
                 console.rule()

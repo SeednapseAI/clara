@@ -44,15 +44,15 @@ Then, use the command:
 $ clara chat [PATH]
 ```
 
-If the path is omitted, '.' will be used.
+If the path is omitted then '.' will be used.
 
-To exit use `CTRL-C` or `CTRL-D`.
+To exit use `CTRL-C` or `CTRL-D`, or commands `/quit` or `/exit`.
 
 All commands:
 
 ```
-COMMANDS
-    COMMAND is one of the following:
+     ask
+       Ask a question about the code from the command-line.
 
      chat
        Chat about the code.
@@ -61,7 +61,7 @@ COMMANDS
        Delete vector DB for a given path.
 
      config
-       Get config for a given path.
+       Show config for a given path.
 ```
 
 ## Chat commands
@@ -78,6 +78,27 @@ During chat you can also use this commands:
 
 /help    -- show this message
 ```
+
+## Configuration
+
+Run `poetry run clara config` to know from where the program is going to read the configuration. Usually this path is going to be `/.config/clara/clara.yaml`.
+
+For now, there is only one parameter to change. This is a sample configuration:
+
+```
+llm:
+  model: gpt-3.5-turbo
+```
+
+Change the model for `gpt-4` if you have access to it.
+
+## Cache
+
+Vector DB and chat history are stored in a cache directory, per code directory. Use `poetry run clara config` to know the path to this directory.
+
+You can remove manually this directory, if you want to refresh the data stored, or simply use the command `poetry run clara clean`.
+
+If you want to chat with the code without reading/storing the vector DB (using the DB in memory), use the command `poetry run clara [PATH] --memory-storage`.
 
 ## Roadmap
 
