@@ -47,7 +47,7 @@ class ChatChain(Chain):
         # console.log("Condensated answer:", condensate_output)
         documents = self.retriever.get_relevant_documents(condensate_output)
         context = "---\n".join([
-            f"{document.page_content}\nSOURCE: {document.metadata['source']}"
+            f"{document.page_content}\nSOURCE: {document.metadata['source']}\n"
             for document in documents])
         answer_output = self.answer_chain.run(
             {
