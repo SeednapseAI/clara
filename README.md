@@ -16,9 +16,9 @@ Clara is an AI-powered tool designed to assist developers in navigating unfamili
 
 In the future, Clara will also provide support for tasks such as documentation, auditing, and developing new features, among others.
 
-## Usage
+## Install
 
-Install:
+With:
 
 ```
 pipx install clara-ai
@@ -81,5 +81,10 @@ During chat you can also use this commands:
 
 ## Roadmap
 
-- [ ] Improve chat: short-term history, context, personality,...
-- [ ] Tools: document code, audit, refactoring, test creation,...
+- [x] Short-term history
+- [x] Configurable LLM
+- [ ] Tools
+  - [ ] Document code with docstrings
+  - [ ] Test creation
+  - [ ] Audit code
+  - [ ] Refactoring

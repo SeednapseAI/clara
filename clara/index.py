@@ -6,8 +6,6 @@ from typing import List, Tuple, Iterable, Optional
 from dataclasses import dataclass
 import glob
 
-from langchain.chat_models import ChatOpenAI
-from langchain.chains import ConversationalRetrievalChain
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.indexes.vectorstore import VectorStoreIndexWrapper
 from langchain.vectorstores import Chroma
@@ -15,7 +13,12 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema import Document
 
-from .consts import WILDCARDS, BASE_PERSIST_PATH, PROMPT_PREFIX, CONDENSE_QUESTION_PROMPT
+from .consts import (
+    WILDCARDS,
+    BASE_PERSIST_PATH,
+    PROMPT_PREFIX,
+)
+from .chat import create_chat
 from .console import console
 
 
@@ -28,7 +31,7 @@ class QueryResult:
 
 class ChatHistory:
     def __init__(
-        self, prompt_prefix: Optional[Tuple[str, str]] = None, length_limit: int = 4096
+        self, prompt_prefix: Optional[Tuple[str, str]] = None, length_limit: int = 3500
     ):
         self.prompt_prefix = prompt_prefix
         self.history = [prompt_prefix] if prompt_prefix else []
@@ -133,13 +136,15 @@ class RepositoryIndex:
             shutil.rmtree(self.persist_path)
 
     def init_chat(self):
-        model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)  # 'gpt-4',
-        self.chat = ConversationalRetrievalChain.from_llm(
-            model,
-            retriever=self.index.vectorstore.as_retriever(),
-            return_source_documents=True,
-            condense_question_prompt=CONDENSE_QUESTION_PROMPT,
-        )
+        # model = self.get_model()
+        # self.chat = ConversationalRetrievalChain.from_llm(
+        #     model,
+        #     retriever=self.index.vectorstore.as_retriever(),
+        #     return_source_documents=True,
+        #     condense_question_prompt=CONDENSE_QUESTION_PROMPT,
+        # )
+
+        self.chat = create_chat(self.index.vectorstore.as_retriever())
 
     def query_with_sources(self, query: str) -> QueryResult:
         # return QueryResult(**self.index.query_with_sources(query))

@@ -16,8 +16,7 @@ from .index import RepositoryIndex
 
 
 # Disable warnings
-logging.getLogger("chromadb").setLevel(logging.ERROR)
-logging.getLogger().setLevel(logging.ERROR)
+# logging.getLogger().setLevel(logging.ERROR)
 
 
 class Clara:
@@ -112,11 +111,13 @@ class Clara:
                     for source in result.sources:
                         console.print(f"- [blue underline]{source.metadata['source']}")
                     last_sources = result.sources
-                except InvalidRequestError:
-                    console.print(
-                        ":no_entry: "
-                        "[bold red]Ups, the request was invalid for some reason."
-                    )
+                # except InvalidRequestError:
+                #     console.print(
+                #         ":no_entry: "
+                #         "[bold red]Ups, the request was invalid for some reason."
+                #     )
+                finally:
+                    pass
                 console.rule()
         except (KeyboardInterrupt, EOFError):
             console.print()
