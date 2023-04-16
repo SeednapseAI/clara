@@ -13,6 +13,7 @@ from openai.error import InvalidRequestError
 from .consts import HELP_MESSAGE, CONFIG_PATH
 from .console import console
 from .index import RepositoryIndex
+from .chat import Chat
 
 
 # Disable warnings
@@ -34,7 +35,9 @@ def setup(path: str, memory_storage: bool) -> RepositoryIndex:
     ):
         index.persist()
 
-    return index
+    chat = Chat(retriever=index.get_retriever())
+
+    return index, chat
 
 
 class Clara:
@@ -70,11 +73,11 @@ class Clara:
         full_sources: bool = False,
     ):
         """Ask a question about the code from the command-line."""
-        index = setup(path, memory_storage)
+        index, chat = setup(path, memory_storage)
 
         try:
             with console.status("Querying…", spinner="weather"):
-                result = index.query_with_sources(question)
+                result = chat.query(question)
             if markdown_render:
                 console.print(Markdown(result.answer))
             else:
@@ -99,7 +102,7 @@ class Clara:
 
     def chat(self, path: str = ".", memory_storage: bool = False):
         """Chat about the code."""
-        index = setup(path, memory_storage)
+        index, chat = setup(path, memory_storage)
 
         console.rule("[bold blue]CHAT")
         console.print("Hi, I'm Clara!", ":scroll::mag::robot:")
@@ -146,7 +149,7 @@ class Clara:
 
                 try:
                     with console.status("Querying…", spinner="weather"):
-                        result = index.query_with_sources(query)
+                        result = chat.query(query)
                     console.print()
                     console.print(Markdown(result.answer))
                     console.print()

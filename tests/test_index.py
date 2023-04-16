@@ -1,43 +1,27 @@
 from icecream import ic
 
-from clara.index import ChatHistory
+from clara.chat import ChatHistory
 
 
 class TestChatHistory:
     def test_create(self):
-        history = ChatHistory(
-            prompt_prefix=("You're Clara. Say hi.", "Hi!"), length_limit=3333
-        )
-
-        assert history.history == [("You're Clara. Say hi.", "Hi!")]
-        assert history.length_limit == 3333
-
         history = ChatHistory(length_limit=3333)
         assert history.history == []
         assert history.length_limit == 3333
 
     def test_append(self):
-        history = ChatHistory(prompt_prefix=("You're Clara. Say hi.", "Hi!"))
-
-        history.append(("How are you?", "I'm fine!"))
-        ic(history.history)
-        assert history.history == [
-            ("You're Clara. Say hi.", "Hi!"),
-            ("How are you?", "I'm fine!"),
-        ]
-
         history = ChatHistory()
 
         history.append(("How are you?", "I'm fine!"))
+        history.append(("Nice! What's your name?", "I'm Clara."))
         ic(history.history)
         assert history.history == [
             ("How are you?", "I'm fine!"),
+            ("Nice! What's your name?", "I'm Clara."),
         ]
 
     def test_append_with_limit(self):
-        history = ChatHistory(
-            prompt_prefix=("You're Clara. Say hi.", "Hi!"), length_limit=200
-        )
+        history = ChatHistory(length_limit=200)
 
         history.append(["How are you?", "I'm fine!"])
         history.append(
@@ -66,7 +50,6 @@ class TestChatHistory:
         )
         ic(history.history)
         assert history.history == [
-            ("You're Clara. Say hi.", "Hi!"),
             (
                 "Interesting! Tell me another thing, please.",
                 "Of course! Did you know that the speed of light is approximately "
