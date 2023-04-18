@@ -1,6 +1,6 @@
 from typing import List, Dict
 from dataclasses import dataclass
-from typing import Tuple, Iterable, Optional
+from typing import Tuple, Iterable
 
 from langchain.chat_models import ChatOpenAI
 
@@ -10,8 +10,8 @@ from langchain.chains.base import Chain
 from langchain.schema import BaseRetriever, Document
 
 from .config import config
-from .consts import CONDENSE_QUESTION_PROMPT, ANSWER_QUESTION_PROMPT
-# from .console import console
+from .consts import CONDENSE_QUESTION_PROMPT, ANSWER_QUESTION_PROMPT, DEBUG
+from .utils import log
 
 
 def get_model():
@@ -41,7 +41,6 @@ class ChatChain(Chain):
         return ["answer", "question", "source_documents"]
 
     def _call(self, inputs: Dict[str, str]) -> Dict[str, str]:
-        # console.log(inputs["chat_history"])
         chat_history = "\n\n".join(
             [
                 f"Human: {line[0]}\n\nAssistant: {line[-1]}"
@@ -54,7 +53,7 @@ class ChatChain(Chain):
                 "question": inputs["question"],
             }
         )
-        # console.log("Condensated answer:", condensate_output)
+        log("Condensated answer:", condensate_output)
         documents = self.retriever.get_relevant_documents(condensate_output)
         context = "---\n".join(
             [
@@ -113,10 +112,12 @@ class Chat:
         condense_chain = LLMChain(
             llm=model,
             prompt=CONDENSE_QUESTION_PROMPT,
+            verbose=DEBUG,
         )
         answer_chain = LLMChain(
             llm=model,
             prompt=ANSWER_QUESTION_PROMPT,
+            verbose=DEBUG,
         )
 
         self.chat = ChatChain(
@@ -130,7 +131,6 @@ class Chat:
             {"question": query, "chat_history": self.chat_history.history}
             # {"question": query, "chat_history": ""}
         )
-        # console.log(response)
         self.chat_history.append((response["question"], response["answer"]))
         return QueryResult(
             question=response["question"],

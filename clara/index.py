@@ -53,7 +53,8 @@ class RepositoryIndex:
             documents.extend(loader.load_and_split())
 
         text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
-            chunk_size=1000, chunk_overlap=100
+            chunk_size=config["index"]["chunk_size"],
+            chunk_overlap=config["index"]["chunk_overlap"],
         )
         return text_splitter.split_documents(documents)
 
@@ -88,6 +89,6 @@ class RepositoryIndex:
 
     def get_retriever(self) -> BaseRetriever:
         return self.index.vectorstore.as_retriever(
-                search_type=config["index"]["search_type"],
-                search_kwargs={"k": config["index"]["k"]},
-            )
+            search_type=config["index"]["search_type"],
+            search_kwargs={"k": config["index"]["k"]},
+        )

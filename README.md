@@ -10,11 +10,20 @@ Clara is a tool to help developers understand and work with a code repository.
 
 ***This project is currently in its early stages of development and is considered a work in progress. You may encounter some issues, or incomplete features. We appreciate your understanding and patience as we continue to refine and enhance the project. Your feedback will help us improve and shape this project.***
 
-## Introduction
+## Overview
 
-Clara is an AI-powered tool designed to assist developers in navigating unfamiliar code repositories, making it highly valuable during the on-boarding process for new projects, or when deciphering legacy code.
+Clara is an AI-driven solution created to help developers effortlessly explore new or unfamiliar code repositories. It proves especially beneficial during the onboarding phase for new projects or when decoding legacy code.
 
-In the future, Clara will also provide support for tasks such as documentation, auditing, and developing new features, among others.
+Moving forward, Clara aims to offer assistance in various tasks, including documentation, auditing, and feature development, among others.
+
+## Features
+
+- Intelligent code and documentation analysis.
+- Integrated Database
+    - Utilizes local storage through [ChromaDB](https://www.trychroma.com/).
+    - Maintains data persistence for individual code repositories.
+    - Offers optional in-memory storage without persistence.
+- Context-aware short-term memory: Gathers information from ongoing conversations.
 
 ## Install
 
@@ -81,7 +90,7 @@ During chat you can also use this commands:
 
 ## Configuration
 
-Run `poetry run clara config` to know from where the program is going to read the configuration. Usually this path is going to be `/.config/clara/clara.yaml`.
+Run `clara config` to know from where the program is going to read the configuration. Usually this path is going to be `/.config/clara/clara.yaml`.
 
 For now, there is only a couple of parameters. This is a sample configuration with the default values:
 
@@ -98,17 +107,20 @@ Change the model for `gpt-4` if you have access to it.
 
 ## Cache
 
-Vector DB and chat history are stored in a cache directory, per code directory. Use `poetry run clara config` to know the path to this directory.
+Vector DB and chat history are stored in a cache directory, per code analyzed. Use `clara config` to know the path to this directory.
 
-You can remove manually this directory, if you want to refresh the data stored, or simply use the command `poetry run clara clean`.
+You can remove manually this directory, if you want to refresh the data stored, or simply use the command `clara clean`.
 
-If you want to chat with the code without reading/storing the vector DB (using the DB in memory), use the command `poetry run clara [PATH] --memory-storage`.
+If you want to chat with the code without reading/storing the vector DB (using the DB in memory), use the command `clara [PATH] --memory-storage`.
 
 ## Roadmap
 
 - [x] Short-term history
 - [x] Configurable LLM
-- [ ] Tools
+- [ ] Agent
+  - [ ] Access to filesystem
+- [ ] Features
+  - [ ] Work with remote Git repositories
   - [ ] Document code with docstrings
   - [ ] Test creation
   - [ ] Audit code

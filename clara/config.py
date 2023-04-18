@@ -9,7 +9,9 @@ defaults = {
     "llm": {"name": "gpt-3.5-turbo", "temperature": 0},
     "index": {
         "search_type": "similarity",  # "mmr"
-        "k": 5,
+        "k": 4,
+        "chunk_size": 3000,
+        "chunk_overlap": 200,
     },
 }
 
