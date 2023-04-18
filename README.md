@@ -6,7 +6,7 @@ CLARA: Code Language Assistant & Repository Analyzer 📜🔍🤖
 
 Clara is a tool to help developers understand and work with a code repository.
 
-![Features](https://github.com/SeednapseAI/clara/raw/master/images/screenshot.png)
+https://user-images.githubusercontent.com/538203/232823179-586ef7be-370c-4e65-8cf7-913d066ad2c3.mp4
 
 ***This project is currently in its early stages of development and is considered a work in progress. You may encounter some issues, or incomplete features. We appreciate your understanding and patience as we continue to refine and enhance the project. Your feedback will help us improve and shape this project.***
 
