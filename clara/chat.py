@@ -1,13 +1,14 @@
 from typing import List, Dict
 from dataclasses import dataclass
-from typing import Tuple, Iterable
+from typing import Tuple
 
 from langchain.chat_models import ChatOpenAI
 
 # from langchain.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-from langchain.schema import BaseRetriever, Document
+from langchain.memory import ConversationTokenBufferMemory
+from langchain.schema import BaseRetriever, Document, get_buffer_string
 
 from .config import config
 from .consts import CONDENSE_QUESTION_PROMPT, ANSWER_QUESTION_PROMPT, DEBUG
@@ -41,11 +42,8 @@ class ChatChain(Chain):
         return ["answer", "question", "source_documents"]
 
     def _call(self, inputs: Dict[str, str]) -> Dict[str, str]:
-        chat_history = "\n\n".join(
-            [
-                f"Human: {line[0]}\n\nAssistant: {line[-1]}"
-                for line in inputs["chat_history"]
-            ]
+        chat_history = get_buffer_string(
+            inputs["chat_history"], human_prefix="Human", ai_prefix="Assistant"
         )
         condensate_output = self.condense_chain.run(
             {
@@ -74,40 +72,19 @@ class ChatChain(Chain):
         }
 
 
-class ChatHistory:
-    def __init__(self, length_limit: int = 3500):
-        self.history = []
-        self.length_limit = length_limit
-
-    def append(self, messages: Tuple[str, str]):
-        def get_total_length(messages: Iterable[str]) -> int:
-            return sum(len(message) for message in messages)
-
-        total_length = sum([get_total_length(message) for message in messages])
-        new_history = [messages]
-
-        for line in reversed(self.history):
-            line_length = get_total_length(line)
-
-            if total_length + line_length < self.length_limit:
-                new_history.insert(0, line)
-                total_length += line_length
-
-            else:
-                break
-
-        self.history = new_history
-
-
 class Chat:
     def __init__(self, retriever: BaseRetriever):
         self.retriever = retriever
-        self.chat_history = ChatHistory()
-
         self._create_chat()
 
     def _create_chat(self):
         model = get_model()
+
+        self.chat_history = ConversationTokenBufferMemory(
+            llm=model,
+            max_token_limit=config["llm"]["chat_history"]["token_limit"],
+            return_messages=True,
+        )
 
         condense_chain = LLMChain(
             llm=model,
@@ -128,10 +105,15 @@ class Chat:
 
     def query(self, query: str) -> QueryResult:
         response = self.chat(
-            {"question": query, "chat_history": self.chat_history.history}
+            {
+                "question": query,
+                "chat_history": self.chat_history.load_memory_variables({})["history"],
+            }
             # {"question": query, "chat_history": ""}
         )
-        self.chat_history.append((response["question"], response["answer"]))
+        self.chat_history.save_context(
+            {"input": response["question"]}, {"output": response["answer"]}
+        )
         return QueryResult(
             question=response["question"],
             answer=response["answer"],

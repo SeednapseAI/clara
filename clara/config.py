@@ -6,7 +6,13 @@ from .consts import CONFIG_PATH
 
 
 defaults = {
-    "llm": {"name": "gpt-3.5-turbo", "temperature": 0},
+    "llm": {
+        "name": "gpt-3.5-turbo",
+        "temperature": 0,
+        "chat_history": {
+            "token_limit": 3500,
+        },
+    },
     "index": {
         "search_type": "similarity",  # "mmr"
         "k": 4,
