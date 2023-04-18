@@ -6,7 +6,7 @@ CLARA: Code Language Assistant & Repository Analyzer 📜🔍🤖
 
 Clara is a tool to help developers understand and work with a code repository.
 
-***Note that the code for creating the vector database is loaded the first time you open the chat in the code repository. Subsequent chats will use the preloaded database, ensuring faster response times."***
+***Note that creation of the vector database from the code is done only the first time you open the chat in the code repository. Subsequent chats will use the preloaded database, ensuring faster response times."***
 
 https://user-images.githubusercontent.com/538203/232823179-586ef7be-370c-4e65-8cf7-913d066ad2c3.mp4
 
