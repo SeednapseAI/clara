@@ -14,8 +14,9 @@ defaults = {
         },
     },
     "index": {
-        "search_type": "similarity",  # "mmr"
-        "k": 4,
+        # "search_type": "similarity",
+        "search_type": "mmr",
+        "k": 6,
         "chunk_size": 3000,
         "chunk_overlap": 200,
     },

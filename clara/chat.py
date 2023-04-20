@@ -1,6 +1,5 @@
 from typing import List, Dict
 from dataclasses import dataclass
-from typing import Tuple
 
 from langchain.chat_models import ChatOpenAI
 
@@ -62,7 +61,8 @@ class ChatChain(Chain):
         answer_output = self.answer_chain.run(
             {
                 "context": context,
-                "question": condensate_output,
+                # "question": condensate_output,
+                "question": inputs["question"],
             }
         )
         return {

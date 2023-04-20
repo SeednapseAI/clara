@@ -117,7 +117,10 @@ class Clara:
 
         try:
             while True:
-                query = session.prompt(">>> ")
+                try:
+                    query = session.prompt(">>> ")
+                except KeyboardInterrupt:
+                    continue
                 query = query.strip()
                 if not query:
                     continue
@@ -165,7 +168,7 @@ class Clara:
                 finally:
                     pass
                 console.rule()
-        except (KeyboardInterrupt, EOFError):
+        except EOFError:
             console.print()
         finally:
             console.rule("[bold blue]END")

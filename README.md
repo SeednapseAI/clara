@@ -57,7 +57,7 @@ $ clara chat [PATH]
 
 If the path is omitted then '.' will be used.
 
-To exit use `CTRL-C` or `CTRL-D`, or commands `/quit` or `/exit`.
+To exit use `CTRL-D`, or commands `/quit` or `/exit`.
 
 All commands:
 
