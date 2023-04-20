@@ -2,8 +2,6 @@ import unittest
 
 from clara.index import PythonParsing, NotebookParsing, JavascriptParsing
 
-from icecream import ic
-
 
 class TestPythonParsing(unittest.TestCase):
     def setUp(self):
@@ -131,8 +129,6 @@ hello("Hello!")
     def test_simplify_code(self):
         parser = NotebookParsing(self.example_notebook)
         simplified_markdown = parser.simplify_code()
-        ic(simplified_markdown)
-        ic(self.expected_simplified_markdown)
         self.assertEqual(simplified_markdown, self.expected_simplified_markdown)
 
 
@@ -168,13 +164,9 @@ hello("Hello!");"""
     def test_extract_functions_classes(self):
         parser = JavascriptParsing(self.example_code)
         extracted_code = parser.extract_functions_classes()
-        ic(extracted_code)
-        ic(self.expected_extracted_code)
         self.assertEqual(extracted_code, self.expected_extracted_code)
 
     def test_simplify_code(self):
         parser = JavascriptParsing(self.example_code)
         simplified_code = parser.simplify_code()
-        ic(simplified_code)
-        ic(self.expected_simplified_code)
         self.assertEqual(simplified_code, self.expected_simplified_code)
