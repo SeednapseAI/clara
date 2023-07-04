@@ -268,6 +268,10 @@ class RepositoryIndex:
 
         documents = []
         for file_path in get_files_by_wildcards(self.path, WILDCARDS):
+            # Skip if the path is a directory
+            if not os.path.isfile(file_path):
+                continue
+
             console.log(f"Loading [blue underline]{file_path}", "…")
             if CodeLoader.has_loader(file_path):
                 loader = CodeLoader(file_path)
