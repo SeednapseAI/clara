@@ -15,6 +15,7 @@ from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema import BaseRetriever
+import tokenize
 
 import esprima
 import nbformat
@@ -183,6 +184,9 @@ class CodeLoader(BaseLoader):
 
     def __init__(self, file_path: str, encoding: Optional[str] = None):
         """Initialize with file path."""
+        if encoding is None:
+            with open(file_path, "rb") as f:
+                encoding, _ = tokenize.detect_encoding(f.readline)
         self.file_path = file_path
         self.encoding = encoding
 
@@ -266,9 +270,9 @@ class RepositoryIndex:
         for file_path in get_files_by_wildcards(self.path, WILDCARDS):
             console.log(f"Loading [blue underline]{file_path}", "…")
             if CodeLoader.has_loader(file_path):
-                loader = CodeLoader(file_path, encoding="utf-8")
+                loader = CodeLoader(file_path)
             else:
-                loader = TextLoader(file_path, encoding="utf-8")
+                loader = TextLoader(file_path)
             documents.extend(loader.load_and_split())
 
         text_splitter = CharacterTextSplitter.from_tiktoken_encoder(

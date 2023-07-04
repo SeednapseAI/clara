@@ -125,27 +125,6 @@ files = [
 frozenlist = ">=1.1.0"
 
 [[package]]
-name = "anthropic"
-version = "0.2.6"
-description = "Library for accessing the anthropic API"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "anthropic-0.2.6-py3-none-any.whl", hash = "sha256:bf4b69a9d25d573162accbe8aa9e022331c67a82519250ac30573ad506a1f663"},
-    {file = "anthropic-0.2.6.tar.gz", hash = "sha256:253dca8484bca13eab08afa6b1e1d3f3451d6b65cc2be31c5cd4dac1a49a03f7"},
-]
-
-[package.dependencies]
-aiohttp = "*"
-httpx = "*"
-requests = "*"
-tokenizers = "*"
-
-[package.extras]
-dev = ["black (>=22.3.0)", "pytest"]
-
-[[package]]
 name = "anyio"
 version = "3.6.2"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -570,21 +549,6 @@ sqlalchemy = ["sqlalchemy (>1.3.21,<1.4)"]
 superset = ["apache-superset (>=1.4.1)"]
 
 [[package]]
-name = "cohere"
-version = "3.10.0"
-description = "A Python library for the Cohere API"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "cohere-3.10.0.tar.gz", hash = "sha256:8c06a87a47aa9521051eeba130ce391d84ab578148c4ea5b62f6dcc41bd3a274"},
-]
-
-[package.dependencies]
-requests = "*"
-urllib3 = ">=1.26,<2.0"
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -627,21 +591,6 @@ files = [
     {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
-
-[[package]]
-name = "dill"
-version = "0.3.6"
-description = "serialize all of python"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "dill-0.3.6-py3-none-any.whl", hash = "sha256:a07ffd2351b8c678dfc4a856a3005f8067aea51d6ba6c700796a4d9e280f39f0"},
-    {file = "dill-0.3.6.tar.gz", hash = "sha256:e5db55f3687856d8fbdab002ed78544e1c4559a130302693d839dfe8f93f2373"},
-]
-
-[package.extras]
-graph = ["objgraph (>=1.7.2)"]
 
 [[package]]
 name = "duckdb"
@@ -994,28 +943,6 @@ files = [
 numpy = "*"
 
 [[package]]
-name = "httpcore"
-version = "0.16.3"
-description = "A minimal low-level HTTP client."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "httpcore-0.16.3-py3-none-any.whl", hash = "sha256:da1fb708784a938aa084bde4feb8317056c55037247c787bd7e19eb2c2949dc0"},
-    {file = "httpcore-0.16.3.tar.gz", hash = "sha256:c5d6f04e2fc530f39e0c077e6a30caa53f1451096120f1f38b954afd0b17c0cb"},
-]
-
-[package.dependencies]
-anyio = ">=3.0,<5.0"
-certifi = "*"
-h11 = ">=0.13,<0.15"
-sniffio = ">=1.0.0,<2.0.0"
-
-[package.extras]
-http2 = ["h2 (>=3,<5)"]
-socks = ["socksio (>=1.0.0,<2.0.0)"]
-
-[[package]]
 name = "httptools"
 version = "0.5.0"
 description = "A collection of framework independent HTTP protocol utils."
@@ -1068,30 +995,6 @@ files = [
 
 [package.extras]
 test = ["Cython (>=0.29.24,<0.30.0)"]
-
-[[package]]
-name = "httpx"
-version = "0.23.3"
-description = "The next generation HTTP client."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "httpx-0.23.3-py3-none-any.whl", hash = "sha256:a211fcce9b1254ea24f0cd6af9869b3d29aba40154e947d2a07bb499b3e310d6"},
-    {file = "httpx-0.23.3.tar.gz", hash = "sha256:9818458eb565bb54898ccb9b8b251a28785dd4a55afbc23d0eb410754fe7d0f9"},
-]
-
-[package.dependencies]
-certifi = "*"
-httpcore = ">=0.15.0,<0.17.0"
-rfc3986 = {version = ">=1.3,<2", extras = ["idna2008"]}
-sniffio = "*"
-
-[package.extras]
-brotli = ["brotli", "brotlicffi"]
-cli = ["click (>=8.0.0,<9.0.0)", "pygments (>=2.0.0,<3.0.0)", "rich (>=10,<13)"]
-http2 = ["h2 (>=3,<5)"]
-socks = ["socksio (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "huggingface-hub"
@@ -1286,25 +1189,17 @@ files = [
 
 [package.dependencies]
 aiohttp = ">=3.8.3,<4.0.0"
-anthropic = {version = ">=0.2.6,<0.3.0", optional = true, markers = "extra == \"llms\" or extra == \"all\""}
 async-timeout = {version = ">=4.0.0,<5.0.0", markers = "python_version < \"3.11\""}
-cohere = {version = ">=3,<4", optional = true, markers = "extra == \"llms\" or extra == \"cohere\" or extra == \"all\""}
 dataclasses-json = ">=0.5.7,<0.6.0"
-huggingface_hub = {version = ">=0,<1", optional = true, markers = "extra == \"llms\" or extra == \"all\""}
-manifest-ml = {version = ">=0.0.1,<0.0.2", optional = true, markers = "extra == \"llms\" or extra == \"all\""}
-nlpcloud = {version = ">=1,<2", optional = true, markers = "extra == \"llms\" or extra == \"all\""}
 numexpr = ">=2.8.4,<3.0.0"
 numpy = ">=1,<2"
-openai = {version = ">=0,<1", optional = true, markers = "extra == \"llms\" or extra == \"openai\" or extra == \"all\""}
 openapi-schema-pydantic = ">=1.2,<2.0"
 pydantic = ">=1,<2"
 PyYAML = ">=5.4.1"
 requests = ">=2,<3"
 SQLAlchemy = ">=1,<2"
 tenacity = ">=8.1.0,<9.0.0"
-torch = {version = ">=1,<3", optional = true, markers = "extra == \"llms\" or extra == \"all\""}
 tqdm = ">=4.48.0"
-transformers = {version = ">=4,<5", optional = true, markers = "extra == \"llms\" or extra == \"all\""}
 
 [package.extras]
 all = ["aleph-alpha-client (>=2.15.0,<3.0.0)", "anthropic (>=0.2.6,<0.3.0)", "arxiv (>=1.4,<2.0)", "atlassian-python-api (>=3.36.0,<4.0.0)", "beautifulsoup4 (>=4,<5)", "cohere (>=3,<4)", "deeplake (>=3.2.21,<4.0.0)", "duckduckgo-search (>=2.8.6,<3.0.0)", "elasticsearch (>=8,<9)", "faiss-cpu (>=1,<2)", "google-api-python-client (==2.70.0)", "google-search-results (>=2,<3)", "gptcache (>=0.1.7)", "html2text (>=2020.1.16,<2021.0.0)", "huggingface_hub (>=0,<1)", "jina (>=3.14,<4.0)", "jinja2 (>=3,<4)", "manifest-ml (>=0.0.1,<0.0.2)", "networkx (>=2.6.3,<3.0.0)", "nlpcloud (>=1,<2)", "nltk (>=3,<4)", "nomic (>=1.0.43,<2.0.0)", "openai (>=0,<1)", "opensearch-py (>=2.0.0,<3.0.0)", "pgvector (>=0.1.6,<0.2.0)", "pinecone-client (>=2,<3)", "pinecone-text (>=0.4.2,<0.5.0)", "psycopg2-binary (>=2.9.5,<3.0.0)", "pyowm (>=3.3.0,<4.0.0)", "pypdf (>=3.4.0,<4.0.0)", "pytesseract (>=0.3.10,<0.4.0)", "qdrant-client (>=1.1.2,<2.0.0)", "redis (>=4,<5)", "sentence-transformers (>=2,<3)", "spacy (>=3,<4)", "tensorflow-text (>=2.11.0,<3.0.0)", "tiktoken (>=0.3.2,<0.4.0)", "torch (>=1,<3)", "transformers (>=4,<5)", "weaviate-client (>=3,<4)", "wikipedia (>=1,<2)", "wolframalpha (==5.0.0)"]
@@ -1362,30 +1257,6 @@ files = [
 docs = ["sphinx (>=1.6.0)", "sphinx-bootstrap-theme"]
 flake8 = ["flake8"]
 tests = ["psutil", "pytest (!=3.3.0)", "pytest-cov"]
-
-[[package]]
-name = "manifest-ml"
-version = "0.0.1"
-description = "Manifest for Prompt Programming Foundation Models."
-category = "main"
-optional = false
-python-versions = ">=3.8.0"
-files = [
-    {file = "manifest-ml-0.0.1.tar.gz", hash = "sha256:f828faf7de41fad5318254beec08acdf5142196e0e22203a4047412c2d3127a0"},
-    {file = "manifest_ml-0.0.1-py2.py3-none-any.whl", hash = "sha256:fc4e62e706fd767fd8851d91051fdb71bc79b2df9c66f5879736c46d8163a316"},
-]
-
-[package.dependencies]
-dill = ">=0.3.5"
-redis = ">=4.3.1"
-requests = ">=2.27.1"
-sqlitedict = ">=2.0.0"
-tqdm = ">=4.64.0"
-
-[package.extras]
-all = ["Flask (>=2.1.2)", "accelerate (>=0.10.0)", "autopep8 (>=1.6.0)", "black (>=22.3.0)", "docformatter (>=1.4)", "flake8 (>=4.0.0)", "flake8-docstrings (>=1.6.0)", "isort (>=5.9.3)", "mypy (>=0.950)", "nbsphinx (>=0.8.0)", "pep8-naming (>=0.12.1)", "pre-commit (>=2.14.0)", "pytest (>=7.0.0)", "pytest-cov (>=3.0.0)", "python-dotenv (>=0.20.0)", "recommonmark (>=0.7.1)", "sphinx-autobuild", "sphinx-rtd-theme (>=0.5.1)", "torch (>=1.8.0)", "transformers (>=4.20.0)", "twine", "types-PyYAML (>=6.0.7)", "types-protobuf (>=3.19.21)", "types-python-dateutil (>=2.8.16)", "types-redis (>=4.2.6)", "types-requests (>=2.27.29)", "types-setuptools (>=57.4.17)"]
-api = ["Flask (>=2.1.2)", "accelerate (>=0.10.0)", "torch (>=1.8.0)", "transformers (>=4.20.0)"]
-dev = ["autopep8 (>=1.6.0)", "black (>=22.3.0)", "docformatter (>=1.4)", "flake8 (>=4.0.0)", "flake8-docstrings (>=1.6.0)", "isort (>=5.9.3)", "mypy (>=0.950)", "nbsphinx (>=0.8.0)", "pep8-naming (>=0.12.1)", "pre-commit (>=2.14.0)", "pytest (>=7.0.0)", "pytest-cov (>=3.0.0)", "python-dotenv (>=0.20.0)", "recommonmark (>=0.7.1)", "sphinx-autobuild", "sphinx-rtd-theme (>=0.5.1)", "twine", "types-PyYAML (>=6.0.7)", "types-protobuf (>=3.19.21)", "types-python-dateutil (>=2.8.16)", "types-redis (>=4.2.6)", "types-requests (>=2.27.29)", "types-setuptools (>=57.4.17)"]
 
 [[package]]
 name = "markdown-it-py"
@@ -1736,21 +1607,6 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx", "sphinxcontrib-github-al
 test = ["pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
-name = "nlpcloud"
-version = "1.0.40"
-description = "Python client for the NLP Cloud API"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "nlpcloud-1.0.40-py3-none-any.whl", hash = "sha256:9efc67dadbf64015330035d8772aff144da3c24701ddef6173b1da3a1b31d407"},
-    {file = "nlpcloud-1.0.40.tar.gz", hash = "sha256:f11166782a706431a50e44343f6eb1aa8bac612be08f73e04ad2313d970e86b8"},
-]
-
-[package.dependencies]
-requests = "*"
-
-[[package]]
 name = "nltk"
 version = "3.8.1"
 description = "Natural Language Toolkit"
@@ -1924,14 +1780,14 @@ wheel = "*"
 
 [[package]]
 name = "openai"
-version = "0.27.4"
+version = "0.27.8"
 description = "Python client library for the OpenAI API"
 category = "main"
 optional = false
 python-versions = ">=3.7.1"
 files = [
-    {file = "openai-0.27.4-py3-none-any.whl", hash = "sha256:3b82c867d531e1fd2003d9de2131e1c4bfd4c70b1a3149e0543a555b30807b70"},
-    {file = "openai-0.27.4.tar.gz", hash = "sha256:9f9d27d26e62c6068f516c0729449954b5ef6994be1a6cbfe7dbefbc84423a04"},
+    {file = "openai-0.27.8-py3-none-any.whl", hash = "sha256:e0a7c2f7da26bdbe5354b03c6d4b82a2f34bd4458c7a17ae1a7092c3e397e03c"},
+    {file = "openai-0.27.8.tar.gz", hash = "sha256:2483095c7db1eee274cebac79e315a986c4e55207bb4fa7b82d185b3a2ed9536"},
 ]
 
 [package.dependencies]
@@ -2549,25 +2405,6 @@ files = [
 cffi = {version = "*", markers = "implementation_name == \"pypy\""}
 
 [[package]]
-name = "redis"
-version = "4.5.4"
-description = "Python client for Redis database and key-value store"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "redis-4.5.4-py3-none-any.whl", hash = "sha256:2c19e6767c474f2e85167909061d525ed65bea9301c0770bb151e041b7ac89a2"},
-    {file = "redis-4.5.4.tar.gz", hash = "sha256:73ec35da4da267d6847e47f68730fdd5f62e2ca69e3ef5885c6a78a9374c3893"},
-]
-
-[package.dependencies]
-async-timeout = {version = ">=4.0.2", markers = "python_version <= \"3.11.2\""}
-
-[package.extras]
-hiredis = ["hiredis (>=1.0.0)"]
-ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"]
-
-[[package]]
 name = "regex"
 version = "2023.3.23"
 description = "Alternative regular expression module, to replace re."
@@ -2658,24 +2495,6 @@ urllib3 = ">=1.21.1,<1.27"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
-
-[[package]]
-name = "rfc3986"
-version = "1.5.0"
-description = "Validating URI References per RFC 3986"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "rfc3986-1.5.0-py2.py3-none-any.whl", hash = "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"},
-    {file = "rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
-]
-
-[package.dependencies]
-idna = {version = "*", optional = true, markers = "extra == \"idna2008\""}
-
-[package.extras]
-idna2008 = ["idna"]
 
 [[package]]
 name = "rich"
@@ -2975,17 +2794,6 @@ postgresql-psycopg2binary = ["psycopg2-binary"]
 postgresql-psycopg2cffi = ["psycopg2cffi"]
 pymysql = ["pymysql", "pymysql (<1)"]
 sqlcipher = ["sqlcipher3-binary"]
-
-[[package]]
-name = "sqlitedict"
-version = "2.1.0"
-description = "Persistent dict in Python, backed up by sqlite3 and pickle, multithread-safe."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "sqlitedict-2.1.0.tar.gz", hash = "sha256:03d9cfb96d602996f1d4c2db2856f1224b96a9c431bdd16e78032a72940f9e8c"},
-]
 
 [[package]]
 name = "starlette"
@@ -3825,4 +3633,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5bc29fe78cb56150a439653e607c116deb48f12de6edd05124817ca22b3f7cdb"
+content-hash = "c07bfc836b2ffd55b91da19fb18f0632676e4f2cf9ba45e2cbaf0953ffbb95d9"
